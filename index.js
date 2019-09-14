@@ -2,11 +2,11 @@ const http = require('http');
 const env = require('./enviroment').getEnviroment()
 const router = require('./router')
 const headers = require('./config/headers')
+const utils = require('./config/utils')
 
 const server = http.createServer(function (req, res) {
     let m = router.match(req.method + ' ' + req.url)
-    if (m) {        
-        console.log(m)        
+    if (m) {                   
         getBody(req, (body) => {
             req.body = body;
             m.fn(req, res, m.params)
@@ -19,7 +19,7 @@ const server = http.createServer(function (req, res) {
 
 const getBody = (req, cb) => {
     let bodyBuffer = Buffer.from('')
-    req.on('data', (data) => {
+    req.on('data', (data) => {        
         let auxBuffer = Buffer.from(data, 'utf8')
         bodyBuffer = Buffer.concat([bodyBuffer, auxBuffer])
     })
@@ -29,9 +29,9 @@ const getBody = (req, cb) => {
 }
 
 server.listen(env.port);
-console.log("Server started...")
+utils.printLog("Server started...")
 
 /** NODE JS HANDLE ERROR */
 process.on('uncaughtException', (err) => {
-    console.error(err.stack, "error")
+    utils.printLog(err.stack, "error")
 });

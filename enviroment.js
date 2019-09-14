@@ -12,7 +12,7 @@ function getEnviroment() {
         env.port = 3000        
         env.mongoDB = {
             url: "mongodb://localhost:27017",
-            bd: "wc"
+            bd: "WickedDB"
         }        
     } else if (process.env.NODE_ENV == "development") {
     
