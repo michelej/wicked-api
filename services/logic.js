@@ -12,12 +12,22 @@ const saveNewAmountMoney = async ( doc ) => {
     }
 }
 
+const getAllMoneyRecords = async ( params ) => {
+    try {               
+        let resp = await db.load("moneyLog")        
+        return resp
+    } catch (err) { 
+        utils.printLog('Error during operation: '+ err.stack) 
+        throw new Error(err)
+    }
+}
 
 const mapAmountMoney = (doc) => {
     try{
-        if(doc.amount==undefined || doc.creationDate==undefined  || doc.type==undefined  
-            || doc.description==undefined  || doc.origin==undefined  || doc.category==undefined ) throw new Error("Missing fields")
-        doc.creationDate = new Date(doc.creationDate)        
+        if(doc.amount==undefined || doc.date==undefined  || doc.type==undefined  
+            || doc.description==undefined  || doc.origin==undefined  || doc.category==undefined || doc.type==undefined ) throw new Error("Missing fields")
+        doc.creationDate = new Date()        
+        doc.date = new Date(doc.creationDate)        
         doc.amount = parseFloat(doc.amount).toFixed(2)
         if( !(doc.type === 'expenses' || doc.type === 'income') ) throw new Error("Type must be (expenses) or (income)")
         return doc
@@ -26,4 +36,4 @@ const mapAmountMoney = (doc) => {
     }    
 }
 
-module.exports = { saveNewAmountMoney }
+module.exports = { saveNewAmountMoney , getAllMoneyRecords}
