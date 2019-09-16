@@ -5,26 +5,31 @@ const headers = require('./config/headers')
 const utils = require('./config/utils')
 const logic = require('./services/logic')
 
-router.addRoute('POST ' + env.basepathAPI + '/money/save', async function(req, res, params) {
-    try{
-        await logic.saveNewAmountMoney(req.body)
-        res.writeHead(200, headers);
-        res.end(JSON.stringify({"message":"ok"}));
-    }catch(error){
-        res.writeHead(400, headers);
-        res.end(JSON.stringify({"error":error.stack}));
-    }    
+router.addRoute('GET ', async function (req, res, params) {
+    res.writeHead(200, headers);
+    res.end(JSON.stringify({ "message": "ok" }));
 });
 
-router.addRoute('POST ' + env.basepathAPI + '/money/list', async function(req, res, params) {
-    try{
+router.addRoute('POST ' + env.basepathAPI + '/money/save', async function (req, res, params) {
+    try {
+        await logic.saveNewAmountMoney(req.body)
+        res.writeHead(200, headers);
+        res.end(JSON.stringify({ "message": "ok" }));
+    } catch (error) {
+        res.writeHead(400, headers);
+        res.end(JSON.stringify({ "error": error.stack }));
+    }
+});
+
+router.addRoute('POST ' + env.basepathAPI + '/money/list', async function (req, res, params) {
+    try {
         let resp = await logic.getAllMoneyRecords(req.body)
         res.writeHead(200, headers);
         res.end(JSON.stringify(resp));
-    }catch(error){
+    } catch (error) {
         res.writeHead(400, headers);
-        res.end(JSON.stringify({"error":error.stack}));
-    }    
+        res.end(JSON.stringify({ "error": error.stack }));
+    }
 });
 
 
