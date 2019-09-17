@@ -4,6 +4,7 @@ function getEnviroment() {
     env.basepath = '/wicked'
     env.basepathAPI = env.basepath + "/api/" + env.apiVersion    
 
+    console.log("NODE_ENV : "+process.env.NODE_ENV)
     /**
      * LOCAL
      */
