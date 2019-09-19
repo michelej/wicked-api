@@ -1,4 +1,6 @@
 let env = {}    
+require('dotenv').config()
+
 function getEnviroment() {       
     env.apiVersion = "v1"
     env.basepath = '/wicked'
@@ -18,8 +20,13 @@ function getEnviroment() {
     } else if (process.env.NODE_ENV == "development") {
     
     } else if (process.env.NODE_ENV == "production") {
-    
-    }
+        env.name = 'Production'        
+        env.port = 3000        
+        env.mongoDB = {
+            url: "mongodb+srv://"+process.env.MONGO_USER+":"+process.env.MONGO_PASSWORD+"@"+process.env.MONGO_SERVER+"/test?retryWrites=true&w=majority",
+            bd: "WickedDB"
+        }   
+    }    
     return env
 }
 exports.getEnviroment = getEnviroment

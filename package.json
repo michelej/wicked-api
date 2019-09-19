@@ -5,13 +5,16 @@
   "main": "index.js",
   "scripts": {
     "start": "nodemon .",
+    "start:development": "SET NODE_ENV=development& node .",
+    "start:production": "SET NODE_ENV=production& node .",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
     "mongodb": "3.2.3",
-    "routes": "2.1.0"
+    "routes": "2.1.0",
+    "dotenv": "8.1.0"
   },
   "devDependencies": {}
 }
