@@ -27,6 +27,7 @@ function getEnviroment() {
             bd: "WickedDB"
         }   
     }    
+    console.log(env)
     return env
 }
 exports.getEnviroment = getEnviroment
