@@ -30,6 +30,9 @@ const getBody = (req, cb) => {
 
 server.listen(env.port);
 utils.printLog("Server started...")
+utils.printLog("Running as: " + env.name)
+utils.printLog(JSON.stringify(env,null,2))
+
 
 /** NODE JS HANDLE ERROR */
 process.on('uncaughtException', (err) => {
