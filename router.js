@@ -10,6 +10,19 @@ router.addRoute('GET ', async function (req, res, params) {
     res.end(JSON.stringify({ "message": "ok" }));
 });
 
+router.addRoute('GET '+env.basepathAPI+'/auth', async function (req, res, params) {
+    try{
+        let auth = req.headers['authorization'].split(" ")
+        let credentials=new Buffer(auth[1],'base64').toString().split(":")
+        console.log(credentials)
+        res.writeHead(200, headers);
+        res.end(JSON.stringify({ "message": "ok" }));
+    }catch(error){
+        res.writeHead(500, headers);
+        res.end(JSON.stringify({ "error": error.stack }));
+    }            
+});
+
 router.addRoute('POST ' + env.basepathAPI + '/money/save', async function (req, res, params) {
     try {
         await logic.saveNewAmountMoney(req.body)
