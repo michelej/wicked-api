@@ -13,10 +13,15 @@ router.addRoute('GET ', async function (req, res, params) {
 router.addRoute('GET '+env.basepathAPI+'/auth', async function (req, res, params) {
     try{
         let auth = req.headers['authorization'].split(" ")
-        let credentials=new Buffer(auth[1],'base64').toString().split(":")
-        console.log(credentials)
-        res.writeHead(200, headers);
-        res.end(JSON.stringify({ "message": "ok" }));
+        let credentials=new Buffer(auth[1],'base64').toString().split(":")        
+        let at = await logic.authenticate(credentials[0],credentials[1])        
+        if(at){
+           res.writeHead(200, headers);
+           res.end(JSON.stringify({ "message": "ok" }));
+        }else{
+            res.writeHead(401, headers);
+            res.end(JSON.stringify({ "message": "authentication failed." }));
+        }           
     }catch(error){
         res.writeHead(500, headers);
         res.end(JSON.stringify({ "error": error.stack }));

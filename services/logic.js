@@ -36,4 +36,15 @@ const mapAmountMoney = (doc) => {
     }    
 }
 
-module.exports = { saveNewAmountMoney , getAllMoneyRecords}
+
+const authenticate = async (user,pass) => {    
+    try{               
+        let res = await db.findOne("authData",{"user":user})        
+        return res!=null && res.password == pass        
+    }catch(error){
+        throw new Error("mapping fields : "+error.stack)
+    }    
+}
+
+
+module.exports = { saveNewAmountMoney , getAllMoneyRecords , authenticate}

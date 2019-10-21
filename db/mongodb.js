@@ -11,4 +11,6 @@ const save = async (collection,json) => (await (await getDB()).collection(collec
 
 const remove = async (collection,id) => (await (await getDB()).collection(collection).deleteOne({ "_id" : ObjectId(id) }));
 
-module.exports = { load , save , remove}
+const findOne = async (collection , query) => (await (await getDB()).collection(collection).findOne(query));
+
+module.exports = { load , save , remove , findOne}
