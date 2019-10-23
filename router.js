@@ -30,9 +30,14 @@ router.addRoute('GET '+env.basepathAPI+'/auth', async function (req, res, params
 
 router.addRoute('POST ' + env.basepathAPI + '/money/save', async function (req, res, params) {
     try {
-        await logic.saveNewAmountMoney(req.body)
-        res.writeHead(200, headers);
-        res.end(JSON.stringify({ "message": "ok" }));
+        if(await checkAuthentication(req)){
+            await logic.saveNewAmountMoney(req.body)
+            res.writeHead(200, headers);
+            res.end(JSON.stringify({ "message": "ok" }));
+        }else{
+            res.writeHead(401, headers);
+            res.end(JSON.stringify({ "message": "authentication failed." }));
+        }           
     } catch (error) {
         res.writeHead(400, headers);
         res.end(JSON.stringify({ "error": error.stack }));
@@ -41,9 +46,14 @@ router.addRoute('POST ' + env.basepathAPI + '/money/save', async function (req, 
 
 router.addRoute('POST ' + env.basepathAPI + '/money/list', async function (req, res, params) {
     try {
-        let resp = await logic.getAllMoneyRecords(req.body)
-        res.writeHead(200, headers);
-        res.end(JSON.stringify(resp));
+        if(await checkAuthentication(req)){
+            let resp = await logic.getAllMoneyRecords(req.body)
+            res.writeHead(200, headers);
+            res.end(JSON.stringify(resp));
+        }else{
+            res.writeHead(401, headers);
+            res.end(JSON.stringify({ "message": "authentication failed." }));
+        }        
     } catch (error) {
         res.writeHead(400, headers);
         res.end(JSON.stringify({ "error": error.stack }));
@@ -88,5 +98,16 @@ const handleResponse = (error, result, req, res) => {
         res.end(JSON.stringify(error));
     }
 }
+
+const checkAuthentication = async (req) => {
+    if(req.headers['authorization']){
+        const auth = req.headers['authorization'].split(" ")
+        const credentials=new Buffer(auth[1],'base64').toString().split(":")        
+        return await logic.authenticate(credentials[0],credentials[1])
+    }else{
+        return false
+    }    
+}
+
 
 module.exports = router
