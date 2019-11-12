@@ -22,6 +22,15 @@ const getAllMoneyRecords = async ( params ) => {
     }
 }
 
+const deleteMoney = async ( id ) => {
+    try {                
+        await db.remove("moneyLog",id)        
+    } catch (err) { 
+        utils.printLog('Error during operation: '+ err.stack) 
+        throw new Error(err)
+    }
+}
+
 const mapAmountMoney = (doc) => {
     try{
         if(doc.amount==undefined || doc.date==undefined  || doc.type==undefined  
@@ -47,4 +56,4 @@ const authenticate = async (user,pass) => {
 }
 
 
-module.exports = { saveNewAmountMoney , getAllMoneyRecords , authenticate}
+module.exports = { saveNewAmountMoney , getAllMoneyRecords , authenticate , deleteMoney}
