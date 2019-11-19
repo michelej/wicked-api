@@ -34,15 +34,24 @@ const deleteMoney = async ( id ) => {
 const mapAmountMoney = (doc) => {
     try{
         if(doc.amount==undefined || doc.date==undefined  || doc.type==undefined  
-            || doc.description==undefined  || doc.origin==undefined  || doc.category==undefined || doc.type==undefined ) throw new Error("Missing fields")
+            || doc.description==undefined  || doc.origin==undefined  || doc.categories==undefined || doc.type==undefined ) throw new Error("Missing fields")
         doc.creationDate = new Date()        
-        doc.date = new Date(doc.creationDate)        
-        doc.amount = parseFloat(doc.amount).toFixed(2)
+        doc.date = new Date(doc.creationDate)                
         if( !(doc.type === 'expenses' || doc.type === 'income') ) throw new Error("Type must be (expenses) or (income)")
         return doc
     }catch(error){
         throw new Error("mapping fields : "+error.stack)
     }    
+}
+
+const getAllCategories = async ( ) => {
+    try {               
+        let resp = await db.loadOne("webConfig")         
+        return resp.categories
+    } catch (err) { 
+        utils.printLog('Error during operation: '+ err.stack) 
+        throw new Error(err)
+    }
 }
 
 
@@ -56,4 +65,4 @@ const authenticate = async (user,pass) => {
 }
 
 
-module.exports = { saveNewAmountMoney , getAllMoneyRecords , authenticate , deleteMoney}
+module.exports = { saveNewAmountMoney , getAllMoneyRecords , authenticate , deleteMoney ,getAllCategories}
