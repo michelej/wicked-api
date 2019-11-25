@@ -10,34 +10,34 @@ router.addRoute('GET ', async function (req, res, params) {
     res.end(JSON.stringify({ "message": "ok" }));
 });
 
-router.addRoute('GET '+env.basepathAPI+'/auth', async function (req, res, params) {
-    try{
+router.addRoute('GET ' + env.basepathAPI + '/auth', async function (req, res, params) {
+    try {
         let auth = req.headers['authorization'].split(" ")
-        let credentials=new Buffer(auth[1],'base64').toString().split(":")        
-        let at = await logic.authenticate(credentials[0],credentials[1])        
-        if(at){
-           res.writeHead(200, headers);
-           res.end(JSON.stringify({ "message": "ok" }));
-        }else{
+        let credentials = Buffer.from(auth[1], 'base64').toString().split(":")
+        let at = await logic.authenticate(credentials[0], credentials[1])
+        if (at) {
+            res.writeHead(200, headers);
+            res.end(JSON.stringify({ "message": "ok" }));
+        } else {
             res.writeHead(401, headers);
             res.end(JSON.stringify({ "message": "authentication failed." }));
-        }           
-    }catch(error){
+        }
+    } catch (error) {
         res.writeHead(500, headers);
         res.end(JSON.stringify({ "error": error.stack }));
-    }            
+    }
 });
 
 router.addRoute('POST ' + env.basepathAPI + '/money', async function (req, res, params) {
     try {
-        if(await checkAuthentication(req)){
+        if (await checkAuthentication(req)) {
             await logic.saveNewAmountMoney(req.body)
             res.writeHead(200, headers);
             res.end(JSON.stringify({ "message": "ok" }));
-        }else{
+        } else {
             res.writeHead(401, headers);
             res.end(JSON.stringify({ "message": "authentication failed." }));
-        }           
+        }
     } catch (error) {
         res.writeHead(400, headers);
         res.end(JSON.stringify({ "error": error.stack }));
@@ -46,14 +46,14 @@ router.addRoute('POST ' + env.basepathAPI + '/money', async function (req, res, 
 
 router.addRoute('DELETE ' + env.basepathAPI + '/money/:id', async function (req, res, params) {
     try {
-        if(await checkAuthentication(req)){
+        if (await checkAuthentication(req)) {
             await logic.deleteMoney(params.id)
             res.writeHead(200, headers);
             res.end(JSON.stringify({ "message": "ok" }));
-        }else{
+        } else {
             res.writeHead(401, headers);
             res.end(JSON.stringify({ "message": "authentication failed." }));
-        }           
+        }
     } catch (error) {
         res.writeHead(400, headers);
         res.end(JSON.stringify({ "error": error.stack }));
@@ -62,14 +62,14 @@ router.addRoute('DELETE ' + env.basepathAPI + '/money/:id', async function (req,
 
 router.addRoute('POST ' + env.basepathAPI + '/money/list', async function (req, res, params) {
     try {
-        if(await checkAuthentication(req)){
+        if (await checkAuthentication(req)) {
             let resp = await logic.getAllMoneyRecords(req.body)
             res.writeHead(200, headers);
             res.end(JSON.stringify(resp));
-        }else{
+        } else {
             res.writeHead(401, headers);
             res.end(JSON.stringify({ "message": "authentication failed." }));
-        }        
+        }
     } catch (error) {
         res.writeHead(400, headers);
         res.end(JSON.stringify({ "error": error.stack }));
@@ -79,14 +79,14 @@ router.addRoute('POST ' + env.basepathAPI + '/money/list', async function (req, 
 
 router.addRoute('GET ' + env.basepathAPI + '/money/categories', async function (req, res, params) {
     try {
-        if(await checkAuthentication(req)){
+        if (await checkAuthentication(req)) {
             let resp = await logic.getAllCategories()
             res.writeHead(200, headers);
             res.end(JSON.stringify(resp));
-        }else{
+        } else {
             res.writeHead(401, headers);
             res.end(JSON.stringify({ "message": "authentication failed." }));
-        }        
+        }
     } catch (error) {
         res.writeHead(400, headers);
         res.end(JSON.stringify({ "error": error.stack }));
@@ -109,13 +109,13 @@ const handleResponse = (error, result, req, res) => {
 }
 
 const checkAuthentication = async (req) => {
-    if(req.headers['authorization']){
+    if (req.headers['authorization']) {
         const auth = req.headers['authorization'].split(" ")
-        const credentials=new Buffer(auth[1],'base64').toString().split(":")        
-        return await logic.authenticate(credentials[0],credentials[1])
-    }else{
+        const credentials = Buffer.from(auth[1], 'base64').toString().split(":")
+        return await logic.authenticate(credentials[0], credentials[1])
+    } else {
         return false
-    }    
+    }
 }
 
 

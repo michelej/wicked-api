@@ -6,7 +6,7 @@ const utils = require('./config/utils')
 
 const server = http.createServer(function (req, res) {
     let m = router.match(req.method + ' ' + req.url)
-    if (m) {                   
+    if (m) {
         getBody(req, (body) => {
             req.body = body;
             m.fn(req, res, m.params)
@@ -18,20 +18,18 @@ const server = http.createServer(function (req, res) {
 });
 
 const getBody = (req, cb) => {
-    let bodyBuffer = Buffer.from('')
-    req.on('data', (data) => {        
-        let auxBuffer = Buffer.from(data, 'utf8')
-        bodyBuffer = Buffer.concat([bodyBuffer, auxBuffer])
-    })
+    let body = '';
+    req.on('data', (data) => body += data)
     req.on('end', () => {
-        cb(bodyBuffer.length > 0 ? JSON.parse(bodyBuffer.toString()) : undefined)
+        cb(body ? JSON.parse(body) : undefined)
     })
 }
+
 
 server.listen(env.port);
 utils.printLog("Server started...")
 utils.printLog("Running as: " + env.name)
-utils.printLog(JSON.stringify(env,null,2))
+utils.printLog(JSON.stringify(env, null, 2))
 
 
 /** NODE JS HANDLE ERROR */
