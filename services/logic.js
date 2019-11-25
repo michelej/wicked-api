@@ -15,6 +15,7 @@ const saveNewAmountMoney = async (doc) => {
 const getAllMoneyRecords = async (params) => {
     try {
         let resp = await db.load("moneyLog")
+        resp.sort((a,b) => b.date-a.date)
         return resp
     } catch (err) {
         utils.printLog('Error during operation: ' + err.stack)
