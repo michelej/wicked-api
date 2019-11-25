@@ -34,7 +34,7 @@ const deleteMoney = async (id) => {
 const mapAmountMoney = (doc) => {
     try {
         doc.creationDate = new Date()
-        doc.date = new Date(doc.creationDate)
+        doc.date = new Date(doc.date)
         if (!(doc.type === 'expenses' || doc.type === 'income')) throw new Error("Type must be (expenses) or (income)")
         return doc
     } catch (error) {
