@@ -53,6 +53,15 @@ const getAllCategories = async () => {
     }
 }
 
+const getAllUsers = async () => {
+    try {
+        let resp = await db.load("authData")
+        return resp.map(e => ({ name : e.user}))
+    } catch (err) {
+        utils.printLog('Error during operation: ' + err.stack)
+        throw new Error(err)
+    }
+}
 
 const authenticate = async (user, pass) => {
     try {
@@ -64,4 +73,4 @@ const authenticate = async (user, pass) => {
 }
 
 
-module.exports = { saveNewAmountMoney, getAllMoneyRecords, authenticate, deleteMoney, getAllCategories }
+module.exports = { saveNewAmountMoney, getAllMoneyRecords, authenticate, deleteMoney, getAllCategories ,getAllUsers }
