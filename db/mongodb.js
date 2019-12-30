@@ -11,8 +11,12 @@ const loadOne = async (collection) => (await (await getDB()).collection(collecti
 
 const save = async (collection,json) => (await (await getDB()).collection(collection).insertOne(json));
 
+const update = async (collection,json,id) => (await (await getDB()).collection(collection).updateOne({'_id':ObjectId(id)},{$set:json}));
+
 const remove = async (collection,id) => (await (await getDB()).collection(collection).deleteOne({ "_id" : ObjectId(id) }));
+
+const findByID = async (collection , id) => (await (await getDB()).collection(collection).findOne({ "_id" : ObjectId(id) }));
 
 const findOne = async (collection , query) => (await (await getDB()).collection(collection).findOne(query));
 
-module.exports = { load , save , remove , findOne , loadOne}
+module.exports = { load , save , remove , findOne , loadOne , findByID , update}

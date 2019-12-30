@@ -1,11 +1,16 @@
 const db = require('../db/mongodb')
 const utils = require('../config/utils')
 
-
 const saveNewAmountMoney = async (doc) => {
     try {
         doc = mapAmountMoney(doc)
-        await db.save("moneyLog", doc)
+        if(doc._id===undefined){
+            await db.save("moneyLog", doc)
+        }else{
+            let id = doc._id
+            delete doc._id
+            await db.update("moneyLog", doc,id)
+        }
     } catch (err) {
         utils.printLog('Error during operation: ' + err.stack)
         throw new Error(err)
@@ -17,6 +22,15 @@ const getAllMoneyRecords = async (params) => {
         let resp = await db.load("moneyLog")
         resp.sort((a,b) => b.date-a.date)
         return resp
+    } catch (err) {
+        utils.printLog('Error during operation: ' + err.stack)
+        throw new Error(err)
+    }
+}
+
+const getMoney = async (id) => {
+    try {
+        return await db.findByID("moneyLog", id)
     } catch (err) {
         utils.printLog('Error during operation: ' + err.stack)
         throw new Error(err)
@@ -35,7 +49,7 @@ const deleteMoney = async (id) => {
 const mapAmountMoney = (doc) => {
     try {
         doc.creationDate = new Date()
-        doc.date = new Date(doc.date)
+        doc.date = new Date(doc.date)                
         if (!(doc.type === 'expenses' || doc.type === 'income')) throw new Error("Type must be (expenses) or (income)")
         return doc
     } catch (error) {
@@ -73,4 +87,4 @@ const authenticate = async (user, pass) => {
 }
 
 
-module.exports = { saveNewAmountMoney, getAllMoneyRecords, authenticate, deleteMoney, getAllCategories ,getAllUsers }
+module.exports = { saveNewAmountMoney, getAllMoneyRecords, authenticate, deleteMoney, getAllCategories ,getAllUsers , getMoney }

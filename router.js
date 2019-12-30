@@ -44,6 +44,22 @@ router.addRoute('POST ' + env.basepathAPI + '/money', async function (req, res, 
     }
 });
 
+router.addRoute('GET ' + env.basepathAPI + '/money/get/:id', async function (req, res, params) {
+    try {
+        if (await checkAuthentication(req)) {
+            let r = await logic.getMoney(params.id)            
+            res.writeHead(200, headers);
+            res.end(JSON.stringify(r));
+        } else {
+            res.writeHead(401, headers);
+            res.end(JSON.stringify({ "message": "authentication failed." }));
+        }
+    } catch (error) {
+        res.writeHead(400, headers);
+        res.end(JSON.stringify({ "error": error.stack }));
+    }
+});
+
 router.addRoute('DELETE ' + env.basepathAPI + '/money/:id', async function (req, res, params) {
     try {
         if (await checkAuthentication(req)) {
