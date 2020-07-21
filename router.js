@@ -125,6 +125,13 @@ router.addRoute('GET ' + env.basepathAPI + '/users', async function (req, res, p
     }
 });
 
+router.addRoute('POST ' + env.basepathAPI + '/money/bbva', async function (req, res, params) {
+    utils.printLog("/money/bbva")
+    console.log(JSON.stringify(req.body,"",4))
+    res.writeHead(200, headers);
+    res.end(JSON.stringify({ "message": "ok" }));   
+});
+
 router.addRoute('OPTIONS /*', (req, res) => {
     res.writeHead(200, headers)
     res.end();
