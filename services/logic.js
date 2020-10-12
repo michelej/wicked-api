@@ -77,6 +77,42 @@ const getAllMoneySources = async () => {
     }
 }
 
+const saveNewBudget = async (doc) => {
+    try {
+        doc = mapBudget(doc)
+        if(doc._id===undefined){
+            await db.save("budgets", doc)
+        }else{
+            let id = doc._id
+            delete doc._id
+            await db.update("budgets", doc,id)
+        }
+    } catch (err) {
+        utils.printLog('Error during operation: ' + err.stack)
+        throw new Error(err)
+    }
+}
+
+const getAllBudgets = async (params) => {
+    try {
+        let resp = await db.load("budgets")
+        resp.sort((a,b) => b.month.value-a.month.value)
+        return resp
+    } catch (err) {
+        utils.printLog('Error during operation: ' + err.stack)
+        throw new Error(err)
+    }
+}
+
+const mapBudget = (doc) => {
+    try {
+        doc.creationDate = new Date()
+        return doc
+    } catch (error) {
+        throw new Error("mapping fields : " + error.stack)
+    }
+}
+
 const getAllUsers = async () => {
     try {
         let resp = await db.load("authData")
@@ -97,4 +133,5 @@ const authenticate = async (user, pass) => {
 }
 
 
-module.exports = { saveNewAmountMoney, getAllMoneyRecords, authenticate, deleteMoney, getAllCategories ,getAllUsers , getMoney , getAllMoneySources }
+module.exports = { saveNewAmountMoney, getAllMoneyRecords, authenticate, deleteMoney, getAllCategories ,getAllUsers ,
+     getMoney , getAllMoneySources ,saveNewBudget ,getAllBudgets }
