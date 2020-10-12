@@ -109,6 +109,22 @@ router.addRoute('GET ' + env.basepathAPI + '/money/categories', async function (
     }
 });
 
+router.addRoute('GET ' + env.basepathAPI + '/money/sources', async function (req, res, params) {
+    try {
+        if (await checkAuthentication(req)) {
+            let resp = await logic.getAllMoneySources()
+            res.writeHead(200, headers);
+            res.end(JSON.stringify(resp));
+        } else {
+            res.writeHead(401, headers);
+            res.end(JSON.stringify({ "message": "authentication failed." }));
+        }
+    } catch (error) {
+        res.writeHead(400, headers);
+        res.end(JSON.stringify({ "error": error.stack }));
+    }
+});
+
 router.addRoute('GET ' + env.basepathAPI + '/users', async function (req, res, params) {
     try {
         if (await checkAuthentication(req)) {

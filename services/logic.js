@@ -67,6 +67,16 @@ const getAllCategories = async () => {
     }
 }
 
+const getAllMoneySources = async () => {
+    try {
+        let resp = await db.loadOne("webConfig")
+        return resp.money_sources
+    } catch (err) {
+        utils.printLog('Error during operation: ' + err.stack)
+        throw new Error(err)
+    }
+}
+
 const getAllUsers = async () => {
     try {
         let resp = await db.load("authData")
@@ -87,4 +97,4 @@ const authenticate = async (user, pass) => {
 }
 
 
-module.exports = { saveNewAmountMoney, getAllMoneyRecords, authenticate, deleteMoney, getAllCategories ,getAllUsers , getMoney }
+module.exports = { saveNewAmountMoney, getAllMoneyRecords, authenticate, deleteMoney, getAllCategories ,getAllUsers , getMoney , getAllMoneySources }
