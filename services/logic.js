@@ -104,6 +104,53 @@ const getAllBudgets = async (params) => {
     }
 }
 
+const getAllMoneyRecordsForBudget = async (params) => {
+    try {
+        let query = [
+            {
+                $project: {
+                    amount: 1,
+                    description : 1,
+                    origin : 1,
+                    date : 1 ,
+                    categories : 1,           
+                    type : 1,
+                    money_source : 1,           
+                    month: {$month: '$date'},
+                    year: {$year: '$date'}
+                    }
+            },
+            {
+                $match:{
+                    money_source : params.money_source,    
+                    $and:[
+                        {"categories" : { $in:params.categories_included}},
+                        {"categories" : { $nin:params.categories_excluded}}
+                    ],
+                    month: params.month,
+                    year: params.year    
+                }
+            }
+        ]
+
+        let resp = await db.aggregate("moneyLog",query)
+        return resp
+    } catch (err) {
+        utils.printLog('Error during operation: ' + err.stack)
+        throw new Error(err)
+    }
+}
+
+const getBudget = async (id) => {
+    try {
+        return await db.findByID("budgets", id)
+    } catch (err) {
+        utils.printLog('Error during operation: ' + err.stack)
+        throw new Error(err)
+    }
+}
+
+
 const mapBudget = (doc) => {
     try {
         doc.creationDate = new Date()
@@ -123,6 +170,15 @@ const getAllUsers = async () => {
     }
 }
 
+const deleteBudget = async (id) => {
+    try {
+        await db.remove("budgets", id)
+    } catch (err) {
+        utils.printLog('Error during operation: ' + err.stack)
+        throw new Error(err)
+    }
+}
+
 const authenticate = async (user, pass) => {
     try {
         let res = await db.findOne("authData", { "user": user })
@@ -134,4 +190,4 @@ const authenticate = async (user, pass) => {
 
 
 module.exports = { saveNewAmountMoney, getAllMoneyRecords, authenticate, deleteMoney, getAllCategories ,getAllUsers ,
-     getMoney , getAllMoneySources ,saveNewBudget ,getAllBudgets }
+     getMoney , getAllMoneySources ,saveNewBudget ,getAllBudgets , getAllMoneyRecordsForBudget ,getBudget , deleteBudget}

@@ -19,4 +19,6 @@ const findByID = async (collection , id) => (await (await getDB()).collection(co
 
 const findOne = async (collection , query) => (await (await getDB()).collection(collection).findOne(query));
 
-module.exports = { load , save , remove , findOne , loadOne , findByID , update}
+const aggregate = async (collection , query) => (await (await getDB()).collection(collection).aggregate(query).toArray());
+
+module.exports = { load , save , remove , findOne , loadOne , findByID , update , aggregate}

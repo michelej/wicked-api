@@ -158,12 +158,61 @@ router.addRoute('POST ' + env.basepathAPI + '/budget', async function (req, res,
     }
 });
 
+router.addRoute('POST ' + env.basepathAPI + '/budget/money-logs', async function (req, res, params) {
+    try {
+        if (await checkAuthentication(req)) {
+            let resp = await logic.getAllMoneyRecordsForBudget(req.body)
+            res.writeHead(200, headers);
+            res.end(JSON.stringify(resp));
+        } else {
+            res.writeHead(401, headers);
+            res.end(JSON.stringify({ "message": "authentication failed." }));
+        }
+    } catch (error) {
+        res.writeHead(400, headers);
+        res.end(JSON.stringify({ "error": error.stack }));
+    }
+});
+
+router.addRoute('DELETE ' + env.basepathAPI + '/budget/:id', async function (req, res, params) {
+    try {
+        if (await checkAuthentication(req)) {
+            await logic.deleteBudget(params.id)
+            res.writeHead(200, headers);
+            res.end(JSON.stringify({ "message": "ok" }));
+        } else {
+            res.writeHead(401, headers);
+            res.end(JSON.stringify({ "message": "authentication failed." }));
+        }
+    } catch (error) {
+        res.writeHead(400, headers);
+        res.end(JSON.stringify({ "error": error.stack }));
+    }
+});
+
+
 router.addRoute('POST ' + env.basepathAPI + '/budget/list', async function (req, res, params) {
     try {
         if (await checkAuthentication(req)) {
             let resp = await logic.getAllBudgets(req.body)
             res.writeHead(200, headers);
             res.end(JSON.stringify(resp));
+        } else {
+            res.writeHead(401, headers);
+            res.end(JSON.stringify({ "message": "authentication failed." }));
+        }
+    } catch (error) {
+        res.writeHead(400, headers);
+        res.end(JSON.stringify({ "error": error.stack }));
+    }
+});
+
+router.addRoute('GET ' + env.basepathAPI + '/budget/get/:id', async function (req, res, params) {
+    try {
+        if (await checkAuthentication(req)) {
+            let r = await logic.getBudget(params.id)            
+            res.writeHead(200, headers);
+            res.end(JSON.stringify(r));
         } else {
             res.writeHead(401, headers);
             res.end(JSON.stringify({ "message": "authentication failed." }));
