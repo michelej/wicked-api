@@ -1,17 +1,13 @@
 {
-  "name": "backend",
-  "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
-  "scripts": {
-    "start" : "node .",
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
-  "author": "",
-  "license": "ISC",
-  "dependencies": {
-    "mongodb": "3.2.3",
-    "routes": "2.1.0"    
-  },
-  "devDependencies": {}
-}
+    "name": "wicked-app",
+    "version": "0.1.0",
+    "description": "Wicked API",    
+    "main": "index.js",
+    "scripts": {
+      "start": "node index.js",
+      "test": "node test.js"
+    },
+    "dependencies": {      
+      "express": "^4.15.2"
+    }    
+  }
